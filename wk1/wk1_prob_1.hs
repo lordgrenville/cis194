@@ -1,7 +1,7 @@
 toDigitsRev :: Integer -> [Integer]
 toDigitsRev x
   | x < 10    = [x]
-  | otherwise = [x `mod` 10] ++ toDigitsRev (x `div` 10)
+  | otherwise = (x `mod` 10) : toDigitsRev (x `div` 10)
 
 toDigits :: Integer -> [Integer]
 toDigits x = reverse (toDigitsRev x)
@@ -29,10 +29,10 @@ validate x = sumDigits (doubleEveryOther (toDigits x)) `mod` 10 == 0
 
 main :: IO ()
 main = do
-    putStrLn (show (validate (4012888888881881)))
-    putStrLn (show (validate (4012888888881882)))
+    print (validate 4012888888881881)
+    print (validate 4012888888881882)
     putStrLn "Please enter number for validation"
     x <- getLine
     let y = (read x :: Integer)
     let res = show (validate y)
-    putStrLn (res)
+    putStrLn res

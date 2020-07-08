@@ -16,12 +16,8 @@ parseMessage xs =
 parse :: String -> [LogMessage]
 parse x = map parseMessage (splitFile x)
 
---helper func for testing below
-splitString :: String -> [String]
-splitString x = words x
-
 insert :: LogMessage -> MessageTree -> MessageTree
-insert l@(LogMessage _ _ _) Leaf = Node Leaf l Leaf
+insert l@LogMessage {} Leaf = Node Leaf l Leaf
 insert l@(LogMessage _ t1 _) (Node left lm@(LogMessage _ t2 _)  right) = if t1 < t2 then Node (insert l left) lm right  else Node left lm (insert l right)
 insert _ tree = tree --Unknown
 
@@ -31,11 +27,11 @@ build (x:xs) = insert x (build xs)
 
 inOrder :: MessageTree -> [LogMessage]
 inOrder  Leaf = []
-inOrder (Node l msg r) = (inOrder l) ++ [msg] ++ (inOrder r)
+inOrder (Node l msg r) = inOrder l ++ [msg] ++ inOrder r
 
 logFilter :: [LogMessage] -> [LogMessage]
 logFilter [] = []
-logFilter [lm@(LogMessage (Error x) _ _)] = if x > 50 then [lm] else []
+logFilter [lm@(LogMessage (Error x) _ _)] = [lm | x > 50]
 logFilter [_] = []
 logFilter (x:xs) = logFilter [x] ++ logFilter xs
 
