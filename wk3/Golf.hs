@@ -15,19 +15,13 @@ localMaxima _ = []
 getFreqTuples :: [Integer] -> [(Integer, Integer)]
 getFreqTuples = map (\x -> (head x, toInteger $ length x)) . group . sort
 
-getMaxRepeat :: [Integer] -> Integer
-getMaxRepeat x = toInteger $ maximum $ map snd $ getFreqTuples x
-
-genRow :: [Bool] -> String
-genRow x = unwords $ map (\x -> if x then "*" else " ") x
-
 rowFromList :: [(Integer, Integer)] -> Integer -> [Bool]
 --given a set of tuples and row index, return those from orig list with at
 --least index-many apearancwes
 rowFromList xs n =  map (`elem` li) [0..9] where li = nub $ map fst $ filter (\x -> snd x >= n) xs
 
 getBoolArrays :: [Integer] -> [[Bool]]
-getBoolArrays x = map (rowFromList y) $ (\z -> [1..getMaxRepeat z]) x where y = getFreqTuples x
+getBoolArrays x = map (rowFromList $ getFreqTuples x) $ (\z -> [1..f z]) x where f = maximum . map snd . getFreqTuples
 
 histogram :: [Integer] -> String
-histogram x = unlines (reverse (map genRow $ getBoolArrays x)) ++ "===================\n0 1 2 3 4 5 6 7 8 9\n"
+histogram x = unlines (reverse (map f $ getBoolArrays x)) ++ "===================\n0 1 2 3 4 5 6 7 8 9\n" where f = unwords . map (\x -> if x then "*" else " ")
