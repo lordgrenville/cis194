@@ -18,8 +18,18 @@ fun2' :: Integer -> Integer
 fun2' = sum . filter even . takeWhile (/= 1) . iterate (\n -> if even n then n `div` 2 else 3 * n + 1)
 
 --ex2
+data Tree a = Leaf
+            | Node Integer (Tree a) a (Tree a)
+  deriving (Show, Eq)
+
+-- foldTree :: [a] -> Tree a
+-- foldTree =
 
 --ex3
--- xor :: [Bool] -> Bool
--- xor = filter (==False)
+helper :: Bool -> Bool -> Bool
+helper False n = n
+helper True n = not n
+
+xor :: [Bool] -> Bool
+xor = foldr helper False
 
